@@ -29,21 +29,14 @@ RUN wget -q https://www.rforge.net/Rserve/snapshot/Rserve_${RSERVE_VERSION}.tar.
   tar -xf Rserve_${RSERVE_VERSION}.tar.gz && \
   R CMD INSTALL Rserve_${RSERVE_VERSION}.tar.gz
 
-FROM maven:3.5.4-slim AS building
+FROM maven:3.6.0-slim AS building
 
 SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends devscripts debhelper build-essential fakeroot git
+    apt-get install -y --no-install-recommends devscripts debhelper build-essential fakeroot git wget
 
 # Build Rock
-RUN set -x && \
-  cd /usr/share/ && \
-  wget -q -O rock.zip https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock-${ROCK_VERSION}-dist.zip && \
-  unzip -q rock.zip && \
-  rm rock.zip && \
-  mv rock-${ROCK_VERSION} rock
-
 WORKDIR /projects
 RUN git clone https://github.com/obiba/rock.git
 
@@ -53,7 +46,7 @@ RUN git checkout $ROCK_VERSION; \
     mvn clean install && \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
 
-FROM openjdk:8-jdk-stretch AS server
+FROM obiba/obiba-r:4.0
 
 WORKDIR /tmp
 COPY --from=building /projects/rock/target/rock_*.deb .
@@ -69,10 +62,8 @@ RUN chmod +x /usr/share/rock/bin/rock
 COPY bin /opt/obiba/bin
 COPY conf/Rserv.conf /usr/share/rock/conf/Rserv.conf
 COPY conf/Rprofile.R /usr/share/rock/conf/Rprofile.R
-RUN mkdir -p $ROCK_HOME/conf && cp -r /usr/share/rock/conf/* $ROCK_HOME/conf
-RUN adduser --system --home $ROCK_HOME --no-create-home --disabled-password rock
 
-RUN chmod +x -R /opt/obiba/bin && chown -R rock:adm $ROCK_HOME
+RUN chmod +x -R /opt/obiba/bin
 RUN chown -R rock:adm /opt/obiba
 
 # Additional system dependencies
