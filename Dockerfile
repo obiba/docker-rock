@@ -24,11 +24,6 @@ ENV ROCK_USER_PASSWORD password
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
-# Make sure latest known Rserve is installed
-RUN wget -q https://www.rforge.net/Rserve/snapshot/Rserve_${RSERVE_VERSION}.tar.gz && \
-  tar -xf Rserve_${RSERVE_VERSION}.tar.gz && \
-  R CMD INSTALL Rserve_${RSERVE_VERSION}.tar.gz
-
 FROM maven:3.6.0-slim AS building
 
 SHELL ["/bin/bash", "-c"]
@@ -68,14 +63,15 @@ RUN chown -R rock:adm /opt/obiba
 
 # Additional system dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2-dev libssh-dev libgit2-dev libmariadbclient-dev libpq-dev libsodium-dev libgit2-dev libssh2-1-dev libgdal-dev gdal-bin libproj-dev proj-data proj-bin libgeos-dev
-RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')"
-RUN Rscript -e "install.packages(c('gh', 'Cairo', 'multcomp', 'lme4', 'betareg', 'modeltools', 'mvtnorm', 'TH.data', 'nloptr', 'flexmix'), repos=c('https://cloud.r-project.org'), dependencies=TRUE, lib='/usr/local/lib/R/site-library')"
-RUN Rscript -e "BiocManager::install(c('Biobase','GWASTools', 'limma', 'SummarizedExperiment', 'SNPRelate', 'GENESIS', 'MEAL', 'CopyNumber450kData'), ask = FALSE, dependencies=TRUE, lib='/usr/local/lib/R/site-library')"
-RUN Rscript -e "remotes::install_github('perishky/meffil', repos=c('https://cloud.r-project.org'), lib='/usr/local/lib/R/site-library')"
+#RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')"
+#RUN Rscript -e "install.packages(c('gh', 'Cairo', 'multcomp', 'lme4', 'betareg', 'modeltools', 'mvtnorm', 'TH.data', 'nloptr', 'flexmix'), repos=c('https://cloud.r-project.org'), dependencies=TRUE, lib='/usr/local/lib/R/site-library')"
+#RUN Rscript -e "BiocManager::install(c('Biobase','GWASTools', 'limma', 'SummarizedExperiment', 'SNPRelate', 'GENESIS', 'MEAL', 'CopyNumber450kData'), ask = FALSE, dependencies=TRUE, lib='/usr/local/lib/R/site-library')"
+#RUN Rscript -e "remotes::install_github('perishky/meffil', repos=c('https://cloud.r-project.org'), lib='/usr/local/lib/R/site-library')"
+# Make sure latest known Rserve is installed
 
 VOLUME /srv
 
-EXPOSE 6312
+EXPOSE 8085
 
 # Define default command.
 COPY ./docker-entrypoint.sh /
