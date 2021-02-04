@@ -15,14 +15,6 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
 ENV ROCK_VERSION master
-ENV RSERVE_VERSION 1.8-7
-
-ENV ROCK_MANAGER_NAME manager
-ENV ROCK_MANAGER_PASSWORD password
-ENV ROCK_USER_NAME user
-ENV ROCK_USER_PASSWORD password
-ENV ROCK_HOME /srv
-ENV JAVA_OPTS -Xmx2G
 
 FROM maven:3.6.0-slim AS building
 
@@ -42,6 +34,13 @@ RUN git checkout $ROCK_VERSION; \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
 
 FROM obiba/obiba-r:4.0
+
+ENV ROCK_MANAGER_NAME manager
+ENV ROCK_MANAGER_PASSWORD password
+ENV ROCK_USER_NAME user
+ENV ROCK_USER_PASSWORD password
+ENV ROCK_HOME /srv
+ENV JAVA_OPTS -Xmx2G
 
 WORKDIR /tmp
 COPY --from=building /projects/rock/target/rock_*.deb .
@@ -67,7 +66,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2
 #RUN Rscript -e "install.packages(c('gh', 'Cairo', 'multcomp', 'lme4', 'betareg', 'modeltools', 'mvtnorm', 'TH.data', 'nloptr', 'flexmix'), repos=c('https://cloud.r-project.org'), dependencies=TRUE, lib='/usr/local/lib/R/site-library')"
 #RUN Rscript -e "BiocManager::install(c('Biobase','GWASTools', 'limma', 'SummarizedExperiment', 'SNPRelate', 'GENESIS', 'MEAL', 'CopyNumber450kData'), ask = FALSE, dependencies=TRUE, lib='/usr/local/lib/R/site-library')"
 #RUN Rscript -e "remotes::install_github('perishky/meffil', repos=c('https://cloud.r-project.org'), lib='/usr/local/lib/R/site-library')"
-# Make sure latest known Rserve is installed
 
 VOLUME /srv
 

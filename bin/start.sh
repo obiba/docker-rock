@@ -7,5 +7,5 @@ if [ ! -d $ROCK_HOME/conf ]
 	cp -r /usr/share/rock/conf/* $ROCK_HOME/conf
 fi
 
-# Start rserver
+# Start rock
 /usr/share/rock/bin/rock
