@@ -27,3 +27,6 @@ logs:
 
 build:
 	docker-compose -f $(docker_compose_file) build --no-cache
+
+clean:
+	rm -rf target
