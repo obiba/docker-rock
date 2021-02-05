@@ -1,9 +1,12 @@
 #!/bin/bash
 
+echo "[Info] Applying config..."
+
 # Configure node properties
+echo "[Info] Node properties"
 if [ -n "$ROCK_ADDRESS" ]
 then
-	sed s/@rock_address@/$ROCK_ADDRESS/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	sed s,@rock_address@,$ROCK_ADDRESS,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 else
 	echo "[Error] ROCK_ADDRESS is required!"
@@ -28,6 +31,7 @@ fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
 # Configure users
+echo "[Info] Users properties"
 # administrator
 if [ -n "$ROCK_ADMINISTRATOR_NAME" ]
 then
@@ -84,6 +88,7 @@ else
 fi
 
 # Configure AppArmor
+echo "[Info] AppArmor properties"
 if [ -n "$ROCK_APPARMOR_ENABLED" ]
 then
 	sed s/@rock_apparmor_enabled@/$ROCK_APPARMOR_ENABLED/g $ROCK_HOME/conf/application.yml > /tmp/application.yml

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "[Info] ROCK_HOME=$ROCK_HOME"
+
 if [ "$1" = 'app' ]; then
     # Make sure conf folder is available
     if [ ! -d $ROCK_HOME/conf ]
