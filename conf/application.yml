@@ -1,0 +1,51 @@
+# Rserver controller port
+server:
+  port: 8085
+
+# Cluster node
+node:
+  # public address
+  server: @rock_address@
+  # server id
+  id: @rock_id@
+  # cluster names
+  tags: @rock_tags@
+  # health check interval
+  interval: 10
+
+# Consul service registry
+#consul:
+#  server: http://localhost:8500
+#  token:
+
+# Opal app registry
+#opal:
+#  server: http://localhost:8080
+#  token:
+
+# R executable path, required to launch Rserver
+r:
+  exec: /usr/bin/R
+  repos: https://cloud.r-project.org,https://cran.obiba.org
+
+# Security
+security:
+  # whether user passwords are encoded
+  encoded: false
+  users:
+    # administrator, can do all
+    - id: @rock_administrator_name@
+      secret: @rock_administrator_password@
+      roles: administrator
+    # manager of the R server and sessions, can manage the server but cannot use R
+    - id: @rock_manager_name@
+      secret: @rock_manager_password@
+      roles: manager
+    # R sessions user, can use R
+    - id: @rock_user_name@
+      secret: @rock_user_password@
+      roles: user
+  # RAppArmor profile to apply to user role, see setup instructions at <https://github.com/jeroen/RAppArmor>
+#  apparmor:
+#    enabled: @rock_apparmor_enabled@
+#    profile: @rock_apparmor_profile@

@@ -2,26 +2,28 @@
 # Docker helper
 #
 
-no_cache=false
+docker_compose_file=docker-compose.yml
 
-# Build Docker image
-build:
-	sudo docker build --no-cache=$(no_cache) -t="obiba/rock:snapshot" .
+up:
+	docker-compose -f $(docker_compose_file) up -d --remove-orphans
 
-run:
-	sudo docker run -p 8085:8085 --name rock obiba/rock:snapshot
-
-pull:
-	sudo docker pull obiba/rock:snapshot
+down:
+	docker-compose -f $(docker_compose_file) down
 
 stop:
-	sudo docker stop rock
+	docker-compose -f $(docker_compose_file) stop
 
 start:
-	sudo docker start rock
+	docker-compose -f $(docker_compose_file) start
 
-rm:
-	sudo docker rm rock
+restart:
+	docker-compose -f $(docker_compose_file) restart
 
-bash:
-	sudo docker exec -i -t rock /bin/bash
+pull:
+	docker-compose -f $(docker_compose_file) pull
+
+logs:
+	docker-compose -f $(docker_compose_file) logs -f
+
+build:
+	docker-compose -f $(docker_compose_file) build --no-cache
