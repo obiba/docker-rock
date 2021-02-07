@@ -7,10 +7,11 @@ echo "[Info] Node properties"
 if [ -n "$ROCK_ADDRESS" ]
 then
 	sed s,@rock_address@,$ROCK_ADDRESS,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
-	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 else
 	echo "[Warn] No server public address: self-registration not activated"
+	sed s,@rock_address@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
 if [ -n "$ROCK_ID" ]
 then
