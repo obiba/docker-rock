@@ -4,19 +4,19 @@ server:
 
 # Cluster node
 node:
-  # public address
-  server: @rock_address@
   # server id
   id: @rock_id@
   # cluster names
   tags: @rock_tags@
-  # health check interval
-  interval: 10
+  # optional public address, required only for self-registration
+  server: @rock_address@
 
 # Consul service registry
 #consul:
 #  server: http://localhost:8500
 #  token:
+#  # health check interval
+#  interval: 10
 
 # Opal app registry
 #opal:

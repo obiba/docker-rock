@@ -9,7 +9,7 @@ then
 	sed s,@rock_address@,$ROCK_ADDRESS,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 else
-	echo "[Error] ROCK_ADDRESS is required!"
+	echo "[Warn] No server public address: self-registration not activated"
 fi
 
 if [ -n "$ROCK_ID" ]
