@@ -9,24 +9,24 @@ node:
   # cluster names
   tags: @rock_tags@
   # optional public address, required only for self-registration
-  server: @rock_address@
+  server: @rock_server@
 
 # Consul service registry
-#consul:
-#  server: http://localhost:8500
-#  token:
-#  # health check interval
-#  interval: 10
+consul:
+  server: @rock_consul_server@
+  token: @rock_consul_token@
+  # health check interval
+  interval: 10
 
 # Opal app registry
-#opal:
-#  server: http://localhost:8080
-#  token:
+opal:
+  server: @rock_opal_server@
+  token: @rock_opal_token@
 
 # R executable path, required to launch Rserver
 r:
   exec: /usr/bin/R
-  repos: https://cloud.r-project.org,https://cran.obiba.org
+  repos: @rock_repos@
 
 # Security
 security:

@@ -14,6 +14,9 @@ services:
       - ROCK_USER_PASSWORD=${ROCK_USER_PASSWORD}
       - ROCK_ID=${ROCK_ID}
       - ROCK_TAGS=${ROCK_TAGS}
-      - ROCK_ADDRESS=${ROCK_ADDRESS}
+      # for self-registration
+      #- ROCK_SERVER=${ROCK_SERVER}
+      #- ROCK_OPAL_SERVER=${ROCK_OPAL_SERVER}
+      #- ROCK_OPAL_TOKEN=${ROCK_OPAL_TOKEN}
     volumes:
       - ${PROJECT_HOME}/rock_home:/srv

@@ -4,12 +4,12 @@ echo "[Info] Applying config..."
 
 # Configure node properties
 echo "[Info] Node properties"
-if [ -n "$ROCK_ADDRESS" ]
+if [ -n "$ROCK_SERVER" ]
 then
-	sed s,@rock_address@,$ROCK_ADDRESS,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	sed s,@rock_server@,$ROCK_SERVER,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 else
 	echo "[Warn] No server public address: self-registration not activated"
-	sed s,@rock_address@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	sed s,@rock_server@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
@@ -28,6 +28,57 @@ then
 else
 	echo "[Info] Setting default node tags: default"
 	sed s/@rock_tags@/default/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+
+# Consul properties
+echo "[Info] Consul properties"
+if [ -n "$ROCK_CONSUL_SERVER" ]
+then
+	sed s,@rock_consul_server@,$ROCK_CONSUL_SERVER,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+else
+	echo "[Info] No Consul server: self-registration not activated"
+	sed s,@rock_consul_server@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+
+if [ -n "$ROCK_CONSUL_TOKEN" ]
+then
+	sed s,@rock_consul_token@,$ROCK_CONSUL_TOKEN,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+else
+	echo "[Warn] No Consul token: self-registration not safe"
+	sed s,@rock_consul_token@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+
+# Opal properties
+echo "[Info] Opal properties"
+if [ -n "$ROCK_OPAL_SERVER" ]
+then
+	sed s,@rock_opal_server@,$ROCK_OPAL_SERVER,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+else
+	echo "[Info] No Opal server: self-registration not activated"
+	sed s,@rock_opal_server@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+
+if [ -n "$ROCK_OPAL_TOKEN" ]
+then
+	sed s,@rock_opal_token@,$ROCK_OPAL_TOKEN,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+else
+	echo "[Warn] No OPAL token: self-registration not valid"
+	sed s,@rock_opal_token@,,g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+
+# R properties
+echo "[Info] R properties"
+if [ -n "$ROCK_REPOS" ]
+then
+	sed 's;@rock_repos@;$ROCK_REPOS;g' $ROCK_HOME/conf/application.yml > /tmp/application.yml
+else
+	echo "[Info] No R repositories, setting default"
+	sed 's;@rock_repos@;https://cloud.r-project.org,https://cran.obiba.org;g' $ROCK_HOME/conf/application.yml > /tmp/application.yml
 fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
