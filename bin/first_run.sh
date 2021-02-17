@@ -138,23 +138,3 @@ else
 	sed s/@rock_user_name@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 fi
-
-# Configure AppArmor
-echo "[Info] AppArmor properties"
-if [ -n "$ROCK_APPARMOR_ENABLED" ]
-then
-	sed s/@rock_apparmor_enabled@/$ROCK_APPARMOR_ENABLED/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
-else
-	echo "[Info] Setting default apparmor enabled: false"
-	sed s/@rock_apparmor_enabled@/false/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
-fi
-mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
-# TODO install AppArmor profile files and restart apparmor service
-if [ -n "$ROCK_APPARMOR_PROFILE" ]
-then
-	sed s/@rock_apparmor_profile@/$ROCK_APPARMOR_PROFILE/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
-else
-	echo "[Info] Setting default apparmor profile: testprofile"
-	sed s/@rock_apparmor_profile@/testprofile/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
-fi
-mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml

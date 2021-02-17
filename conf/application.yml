@@ -43,7 +43,3 @@ security:
     - id: @rock_user_name@
       secret: @rock_user_password@
       roles: user
-  # RAppArmor profile to apply to user role, see setup instructions at <https://github.com/jeroen/RAppArmor>
-#  apparmor:
-#    enabled: @rock_apparmor_enabled@
-#    profile: @rock_apparmor_profile@
