@@ -19,9 +19,9 @@ ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
 WORKDIR /tmp
-RUN wget -q -O https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock_${ROCK_VERSION}_all.deb
+RUN wget -q https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock_${ROCK_VERSION}_all.deb
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends daemon psmisc && \
+    apt-get install -y --no-install-recommends daemon psmisc procps && \
     DEBIAN_FRONTEND=noninteractive dpkg -i rock_*.deb && \
     rm rock_*.deb
 
