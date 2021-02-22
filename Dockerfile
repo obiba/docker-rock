@@ -39,7 +39,7 @@ ENV JAVA_OPTS -Xmx2G
 WORKDIR /tmp
 COPY --from=building /projects/rock/target/rock_*.deb .
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends daemon psmisc && \
+    apt-get install -y --no-install-recommends daemon psmisc procps && \
     DEBIAN_FRONTEND=noninteractive dpkg -i rock_*.deb && \
     rm rock_*.deb
 
