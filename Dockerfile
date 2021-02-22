@@ -8,27 +8,9 @@ FROM obiba/docker-gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM maven:3.6.0-slim AS building
-
-ENV ROCK_VERSION master
-
-SHELL ["/bin/bash", "-c"]
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends devscripts debhelper build-essential fakeroot git wget
-
-# Build Rock
-WORKDIR /projects
-RUN git clone https://github.com/obiba/rock.git
-
-WORKDIR /projects/rock
-
-RUN git checkout $ROCK_VERSION; \
-    mvn clean install && \
-    mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
-
 FROM obiba/obiba-r:4.0 AS server
 
+ENV ROCK_VERSION 0.8.0
 ENV ROCK_MANAGER_NAME manager
 ENV ROCK_MANAGER_PASSWORD password
 ENV ROCK_USER_NAME user
@@ -37,7 +19,7 @@ ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
 WORKDIR /tmp
-COPY --from=building /projects/rock/target/rock_*.deb .
+RUN wget -q -O https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock_${ROCK_VERSION}_all.deb
 RUN apt-get update && \
     apt-get install -y --no-install-recommends daemon psmisc && \
     DEBIAN_FRONTEND=noninteractive dpkg -i rock_*.deb && \
