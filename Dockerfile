@@ -10,7 +10,7 @@ LABEL OBiBa <dev@obiba.org>
 
 FROM obiba/obiba-r:4.0 AS server
 
-ENV ROCK_VERSION 0.8.1
+ENV ROCK_VERSION 0.9.0
 ENV ROCK_MANAGER_NAME manager
 ENV ROCK_MANAGER_PASSWORD password
 ENV ROCK_USER_NAME user
