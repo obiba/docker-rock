@@ -22,12 +22,21 @@ else
 fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
+if [ -n "$ROCK_CLUSTER" ]
+then
+	sed s/@rock_cluster@/$ROCK_CLUSTER/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+else
+	echo "[Info] Setting default node cluster: default"
+	sed s/@rock_cluster@/default/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+fi
+mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+
 if [ -n "$ROCK_TAGS" ]
 then
 	sed s/@rock_tags@/$ROCK_TAGS/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 else
-	echo "[Info] Setting default node tags: default"
-	sed s/@rock_tags@/default/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	echo "[Info] Setting empty node tags"
+	sed s/@rock_tags@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 

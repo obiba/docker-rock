@@ -6,7 +6,9 @@ server:
 node:
   # server id
   id: @rock_id@
-  # cluster names
+  # cluster name
+  cluster: @rock_cluster@
+  # informative tags
   tags: @rock_tags@
   # optional public address, required only for self-registration
   server: @rock_server@
