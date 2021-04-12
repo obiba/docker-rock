@@ -110,6 +110,8 @@ else
 	echo "[Info] No administrator configured!"
 	sed s/@rock_administrator_name@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+	sed s/@rock_administrator_password@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 fi
 # manager
 if [ -n "$ROCK_MANAGER_NAME" ]
@@ -128,6 +130,8 @@ else
 	echo "[Info] No manager configured!"
 	sed s/@rock_manager_name@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+	sed s/@rock_manager_password@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 fi
 # user
 if [ -n "$ROCK_USER_NAME" ]
@@ -145,5 +149,7 @@ then
 else
 	echo "[Info] No user configured!"
 	sed s/@rock_user_name@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+	sed s/@rock_user_password@//g $ROCK_HOME/conf/application.yml > /tmp/application.yml
 	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 fi
