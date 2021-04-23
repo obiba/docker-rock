@@ -43,6 +43,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2
 # Update R packages
 #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')"
 
+# Install new R packages
+RUN Rscript -e "install.packages(c('resourcer', 'sqldf'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)"
+RUN chown -R rock /var/lib/rock/R/library
+
 WORKDIR $ROCK_HOME
 VOLUME $ROCK_HOME
 
