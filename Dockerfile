@@ -8,7 +8,7 @@ FROM obiba/docker-gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM obiba/obiba-r:4.0 AS server
+FROM obiba/obiba-r:4.1 AS server
 
 ENV ROCK_VERSION 1.0.2
 ENV ROCK_MANAGER_NAME manager
