@@ -27,7 +27,7 @@ RUN git checkout $ROCK_VERSION; \
     mvn clean install && \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
 
-FROM obiba/obiba-r:4.0 AS server
+FROM obiba/obiba-r:4.1 AS server
 
 ENV ROCK_MANAGER_NAME manager
 ENV ROCK_MANAGER_PASSWORD password
