@@ -11,17 +11,21 @@ LABEL OBiBa <dev@obiba.org>
 FROM obiba/obiba-r:4.0 AS server
 
 ENV ROCK_VERSION 1.0.4
-ENV ROCK_ADMINISTRATOR_NAME administrator
-ENV ROCK_ADMINISTRATOR_PASSWORD password
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
 WORKDIR /tmp
-RUN wget -q https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock_${ROCK_VERSION}_all.deb
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends daemon psmisc procps && \
-    DEBIAN_FRONTEND=noninteractive dpkg -i rock_*.deb && \
-    rm rock_*.deb
+
+# Install Rock Server
+RUN set -x && \
+  cd /usr/share/ && \
+  wget -q -O rock.zip https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock-${ROCK_VERSION}-dist.zip && \
+  unzip -q rock.zip && \
+  rm rock.zip && \
+  mv rock-${ROCK_VERSION} rock
+
+RUN adduser --system --home $ROCK_HOME --no-create-home --disabled-password rock; \
+  chmod +x /usr/share/rock/bin/rock
 
 COPY --from=gosu /usr/local/bin/gosu /usr/local/bin/
 
@@ -33,7 +37,7 @@ COPY conf/Rserv.conf /usr/share/rock/conf/Rserv.conf
 COPY conf/Rprofile.R /usr/share/rock/conf/Rprofile.R
 
 RUN chmod +x -R /opt/obiba/bin
-RUN chown -R rock:adm /opt/obiba
+RUN chown -R rock:rock /opt/obiba
 
 # Additional system dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2-dev libssh-dev libgit2-dev libmariadbclient-dev libpq-dev libsodium-dev libgit2-dev libssh2-1-dev libgdal-dev gdal-bin libproj-dev proj-data proj-bin libgeos-dev openssh-client
