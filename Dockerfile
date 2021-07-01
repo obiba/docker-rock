@@ -26,18 +26,19 @@ WORKDIR /projects/rock
 RUN git checkout $ROCK_VERSION; \
     mvn clean install && \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
-1 AS server
 
-ENV ROCK_ADMINISTRATOR_PASSWORD password
+FROM obiba/obiba-r:4.1 AS server
+
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
 WORKDIR /tmp
 COPY --from=building /projects/rock/target/rock-*.zip .
 RUN set -x && \
-  unzip -q rock-*.zip && \
-  rm rock-*.zip && \
-  mv rock-${ROCK_VERSION} /usr/share/rock
+  mv rock-*.zip rock.zip && \
+  unzip -q rock.zip && \
+  rm rock.zip && \
+  mv rock-* /usr/share/rock
 
 RUN adduser --system --home /var/lib/rock --no-create-home --disabled-password rock; \
   chmod +x /usr/share/rock/bin/rock
@@ -52,7 +53,8 @@ COPY conf/Rserv.conf /usr/share/rock/conf/Rserv.conf
 COPY conf/Rprofile.R /usr/share/rock/conf/Rprofile.R
 
 RUN chmod +x -R /opt/obiba/bin
-RUN chown -R rock:adm /opt/obiba
+RUN chown -R rock /opt/obiba
+RUN mkdir -p /var/lib/rock/R/library && chown -R rock /var/lib/rock
 
 # Additional system dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2-dev libssh-dev libgit2-dev libmariadbclient-dev libpq-dev libsodium-dev libgit2-dev libssh2-1-dev libgdal-dev gdal-bin libproj-dev proj-data proj-bin libgeos-dev openssh-client
