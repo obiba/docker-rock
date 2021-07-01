@@ -26,20 +26,21 @@ WORKDIR /projects/rock
 RUN git checkout $ROCK_VERSION; \
     mvn clean install && \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
+1 AS server
 
-FROM obiba/obiba-r:4.1 AS server
-
-ENV ROCK_ADMINISTRATOR_NAME administrator
 ENV ROCK_ADMINISTRATOR_PASSWORD password
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
 WORKDIR /tmp
-COPY --from=building /projects/rock/target/rock_*.deb .
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends daemon psmisc procps && \
-    DEBIAN_FRONTEND=noninteractive dpkg -i rock_*.deb && \
-    rm rock_*.deb
+COPY --from=building /projects/rock/target/rock-*.zip .
+RUN set -x && \
+  unzip -q rock-*.zip && \
+  rm rock-*.zip && \
+  mv rock-${ROCK_VERSION} /usr/share/rock
+
+RUN adduser --system --home /var/lib/rock --no-create-home --disabled-password rock; \
+  chmod +x /usr/share/rock/bin/rock
 
 COPY --from=gosu /usr/local/bin/gosu /usr/local/bin/
 
@@ -59,7 +60,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2
 # Update R packages
 #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')"
 
-# Install new R packages
+# Install required R packages
+RUN Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')"
 RUN Rscript -e "install.packages(c('resourcer', 'sqldf'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)"
 RUN chown -R rock /var/lib/rock/R/library
 
