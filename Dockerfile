@@ -24,7 +24,7 @@ RUN set -x && \
   rm rock.zip && \
   mv rock-${ROCK_VERSION} rock
 
-RUN adduser --system --home $ROCK_HOME --no-create-home --disabled-password rock; \
+RUN adduser --system --home /var/lib/rock --no-create-home --disabled-password rock; \
   chmod +x /usr/share/rock/bin/rock
 
 COPY --from=gosu /usr/local/bin/gosu /usr/local/bin/
@@ -37,7 +37,8 @@ COPY conf/Rserv.conf /usr/share/rock/conf/Rserv.conf
 COPY conf/Rprofile.R /usr/share/rock/conf/Rprofile.R
 
 RUN chmod +x -R /opt/obiba/bin
-RUN chown -R rock:rock /opt/obiba
+RUN chown -R rock /opt/obiba
+RUN mkdir -p /var/lib/rock/R/library && chown -R rock /var/lib/rock
 
 # Additional system dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2-dev libssh-dev libgit2-dev libmariadbclient-dev libpq-dev libsodium-dev libgit2-dev libssh2-1-dev libgdal-dev gdal-bin libproj-dev proj-data proj-bin libgeos-dev openssh-client
@@ -45,7 +46,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2
 # Update R packages
 #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')"
 
-# Install new R packages
+# Install required R packages
+RUN Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')"
 RUN Rscript -e "install.packages(c('resourcer', 'sqldf'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)"
 RUN chown -R rock /var/lib/rock/R/library
 
