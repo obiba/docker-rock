@@ -9,6 +9,11 @@ if [ "$1" = 'app' ]; then
     	then
     	mkdir -p $ROCK_HOME/conf
     	cp -r /usr/share/rock/conf/* $ROCK_HOME/conf
+      # reinstating init script
+      if [ -f /opt/obiba/bin/first_run.sh.done ]
+      then
+        mv /opt/obiba/bin/first_run.sh.done /opt/obiba/bin/first_run.sh
+      fi
     fi
     chown -R rock "$ROCK_HOME"
 
