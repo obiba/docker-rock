@@ -10,7 +10,7 @@ LABEL OBiBa <dev@obiba.org>
 
 FROM obiba/obiba-r:4.1 AS server
 
-ENV ROCK_VERSION 1.0.6
+ENV ROCK_VERSION 1.0.7
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
@@ -48,7 +48,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y procps l
 
 # Install required R packages
 RUN Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')"
-RUN Rscript -e "install.packages(c('resourcer', 'sqldf'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)"
+RUN Rscript -e "install.packages('unixtools', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')"
+RUN Rscript -e "install.packages(c('resourcer', 'sqldf', 'remotes', 'BiocManager', 'haven', 'labelled'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)"
 RUN chown -R rock /var/lib/rock/R/library
 
 WORKDIR $ROCK_HOME
