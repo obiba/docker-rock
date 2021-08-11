@@ -2,31 +2,12 @@
 # Docker helper
 #
 
-docker_compose_file=docker-compose.yml
+no_cache=false
 
-up:
-	docker-compose -f $(docker_compose_file) up -d --remove-orphans
-
-down:
-	docker-compose -f $(docker_compose_file) down
-
-stop:
-	docker-compose -f $(docker_compose_file) stop
-
-start:
-	docker-compose -f $(docker_compose_file) start
-
-restart:
-	docker-compose -f $(docker_compose_file) restart
-
-pull:
-	docker-compose -f $(docker_compose_file) pull
-
-logs:
-	docker-compose -f $(docker_compose_file) logs -f
-
+# Build Docker image
 build:
-	docker-compose -f $(docker_compose_file) build --no-cache
+	sudo docker build --no-cache=$(no_cache) -t="obiba/rock:$(tag)" .
 
-clean:
-	rm -rf target
+push:
+	sudo docker image push obiba/rock:$(tag)
+
