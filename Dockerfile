@@ -10,7 +10,7 @@ LABEL OBiBa <dev@obiba.org>
 
 FROM obiba/obiba-r:4.2 AS server
 
-ENV ROCK_VERSION 1.0.12
+ENV ROCK_VERSION 1.0.13
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
