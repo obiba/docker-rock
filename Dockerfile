@@ -8,7 +8,7 @@ FROM obiba/docker-gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM maven:3.6.0-slim AS building
+FROM maven:3.9.1-amazoncorretto-8-debian AS building
 
 ENV ROCK_VERSION master
 
@@ -59,7 +59,7 @@ RUN \
 
 RUN \
   # Additional system dependencies
-  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y procps libsasl2-dev libssh-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
+  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y procps libsasl2-dev libssh-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
   # Update R packages
   #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')"  && \
   # Install required R packages
