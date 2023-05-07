@@ -10,7 +10,7 @@ LABEL OBiBa <dev@obiba.org>
 
 FROM obiba/obiba-r:4.3 AS server
 
-ENV ROCK_VERSION 1.0.13
+ENV ROCK_VERSION 1.0.14
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
@@ -41,7 +41,7 @@ RUN chmod +x -R /opt/obiba/bin && \
 
 RUN \
   # Additional system dependencies
-  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y procps libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
+  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y procps libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
   # Update R packages
   #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')" && \
   # Install required R packages
