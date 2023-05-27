@@ -29,6 +29,7 @@ RUN git checkout $ROCK_VERSION; \
 
 FROM obiba/obiba-r:4.1 AS server
 
+ENV ARROW_VERSION "5.0.0"
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
@@ -66,6 +67,13 @@ RUN \
   Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')" && \
   Rscript -e "install.packages(c('resourcer'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)" && \
   chown -R rock /var/lib/rock/R/library
+
+# Copy script to install deps
+COPY scripts/install-arrow.bash .
+# Install up-to-date version of apache arrow
+ENV ARROW_VERSION "5.0.0"
+RUN ./install-arrow.bash
+RUN R -e "source('https://raw.githubusercontent.com/apache/arrow/release-${ARROW_VERSION}/r/R/install-arrow.R'); install_arrow();"
 
 WORKDIR $ROCK_HOME
 VOLUME $ROCK_HOME
