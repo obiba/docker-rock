@@ -52,7 +52,7 @@ RUN \
 
 # Install up-to-date version of apache arrow
 # Copy script to install deps
-COPY scripts/install-arrow.bash /
+COPY scripts/install-arrow.bash .
 RUN ./install-arrow.bash
 RUN R -e "source('https://raw.githubusercontent.com/apache/arrow/release-${ARROW_VERSION}/r/R/install-arrow.R'); install_arrow();"
 
