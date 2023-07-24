@@ -11,7 +11,7 @@ LABEL OBiBa <dev@obiba.org>
 FROM obiba/obiba-r:4.3 AS server
 
 ENV ARROW_VERSION "5.0.0"
-ENV ROCK_VERSION 1.0.15
+ENV ROCK_VERSION 1.0.16
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
