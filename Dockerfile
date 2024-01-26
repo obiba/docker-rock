@@ -8,7 +8,7 @@ FROM obiba/docker-gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM maven:3.9.1-amazoncorretto-8-debian AS building
+FROM maven:3-amazoncorretto-17-debian AS building
 
 ENV ROCK_VERSION master
 
@@ -27,11 +27,14 @@ RUN git checkout $ROCK_VERSION; \
     mvn clean install && \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
 
-FROM obiba/obiba-r:4.1 AS server
+FROM obiba/obiba-r:4.3-jammy AS server
 
 ENV ARROW_VERSION "5.0.0"
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
+
+RUN apt-get update && \
+    apt-get install -y unzip
 
 WORKDIR /tmp
 COPY --from=building /projects/rock/target/rock-*.zip .
