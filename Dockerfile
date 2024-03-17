@@ -8,7 +8,7 @@ FROM obiba/docker-gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM obiba/obiba-r:4.3 AS server
+FROM obiba/obiba-r:4.3-java-21-jammy AS server
 
 ENV ARROW_VERSION "5.0.0"
 ENV ROCK_VERSION 2.0.0
