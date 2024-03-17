@@ -8,7 +8,7 @@ FROM tianon/gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM maven:3-amazoncorretto-17-debian AS building
+FROM maven:3-amazoncorretto-21-debian AS building
 
 ENV ROCK_VERSION master
 
