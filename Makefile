@@ -30,7 +30,7 @@ build:
 
 # Build Docker image
 build-image:
-	sudo docker build --no-cache=true -t="obiba/rock:snapshot" .
+	sudo docker build --pull --no-cache=true -t="obiba/rock:snapshot" .
 
 push-image:
 	sudo docker image push obiba/rock:snapshot

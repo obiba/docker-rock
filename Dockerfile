@@ -4,7 +4,7 @@
 # https://github.com/obiba/docker-rock
 #
 
-FROM obiba/docker-gosu:latest AS gosu
+FROM tianon/gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
