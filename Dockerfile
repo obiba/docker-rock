@@ -10,7 +10,6 @@ LABEL OBiBa <dev@obiba.org>
 
 FROM obiba/obiba-r:4.3-java-21-jammy AS server
 
-ENV ARROW_VERSION "5.0.0"
 ENV ROCK_VERSION 2.0.0
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
@@ -53,8 +52,10 @@ RUN \
 # Install up-to-date version of apache arrow
 # Copy script to install deps
 COPY scripts/install-arrow.bash .
-RUN ./install-arrow.bash
-RUN R -e "source('https://raw.githubusercontent.com/apache/arrow/release-${ARROW_VERSION}/r/R/install-arrow.R'); install_arrow();"
+# Install up-to-date version of apache arrow
+RUN \
+  ./install-arrow.bash && \
+  Rscript -e "install.packages('arrow', lib=c('/usr/local/lib/R/site-library'))"
 
 WORKDIR $ROCK_HOME
 VOLUME $ROCK_HOME
