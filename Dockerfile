@@ -27,7 +27,7 @@ RUN git checkout $ROCK_VERSION; \
     mvn clean install && \
     mvn -Prelease org.apache.maven.plugins:maven-antrun-plugin:run@make-deb
 
-FROM obiba/obiba-r:4.3-jammy AS server
+FROM obiba/obiba-r:4.3-java-21-jammy AS server
 
 ENV ARROW_VERSION "5.0.0"
 ENV ROCK_HOME /srv
