@@ -4,13 +4,13 @@
 # https://github.com/obiba/docker-rock
 #
 
-FROM obiba/docker-gosu:latest AS gosu
+FROM tianon/gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
 FROM obiba/obiba-r:4.3-java-21-jammy AS server
 
-ENV ROCK_VERSION 2.0.0
+ENV ROCK_VERSION 2.0.1
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
