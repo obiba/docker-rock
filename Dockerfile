@@ -8,7 +8,7 @@ FROM tianon/gosu:latest AS gosu
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM obiba/obiba-r:4.3-java-21-jammy AS server
+FROM obiba/obiba-r:4.4 AS server
 
 ENV ROCK_VERSION 2.0.1
 ENV ROCK_HOME /srv
