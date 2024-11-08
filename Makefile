@@ -3,19 +3,10 @@
 #
 
 no_cache=false
-r=4.3
-
-all:
-	sudo docker build --no-cache=true -t="obiba/rock:$(tag)-R$(r)" . && \
-		sudo docker build -t="obiba/rock:$(tag)" . && \
-		sudo docker build -t="obiba/rock:latest" . && \
-		sudo docker image push obiba/rock:$(tag)-R$(r) && \
-		sudo docker image push obiba/rock:$(tag) && \
-		sudo docker image push obiba/rock:latest
 
 # Build Docker image
 build:
-	sudo docker build --no-cache=$(no_cache) -t="obiba/rock:$(tag)" .
+	docker build --pull --no-cache=$(no_cache) -t="obiba/rock:$(tag)" . --progress=plain
 
 push:
-	sudo docker image push obiba/rock:$(tag)
+	docker image push obiba/rock:$(tag)

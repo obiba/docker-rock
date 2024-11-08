@@ -4,13 +4,11 @@
 # https://github.com/obiba/docker-rock
 #
 
-FROM tianon/gosu:latest AS gosu
+FROM obiba/obiba-r:4.4.2 AS server
 
 LABEL OBiBa <dev@obiba.org>
 
-FROM obiba/obiba-r:4.4.1 AS server
-
-ENV ROCK_VERSION 2.1.0
+ENV ROCK_VERSION 2.1.1
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
@@ -26,10 +24,6 @@ RUN set -x && \
   adduser --system --home /var/lib/rock --no-create-home --disabled-password rock; \
   chmod +x /usr/share/rock/bin/rock
 
-COPY --from=gosu /usr/local/bin/gosu /usr/local/bin/
-
-RUN chmod +x /usr/share/rock/bin/rock
-
 COPY bin /opt/obiba/bin
 COPY conf/application.yml /usr/share/rock/conf/application.yml
 COPY conf/Rserv.conf /usr/share/rock/conf/Rserv.conf
@@ -41,13 +35,14 @@ RUN chmod +x -R /opt/obiba/bin && \
 
 RUN \
   # Additional system dependencies
-  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y procps libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
+  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu procps libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
   # Update R packages
   #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')" && \
   # Install required R packages
   Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')" && \
   Rscript -e "install.packages(c('resourcer', 's3.resourcer'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)" && \
-  chown -R rock /var/lib/rock/R/library
+  chown -R rock /var/lib/rock/R/library && \
+  chown -R rock $ROCK_HOME
 
 # Install up-to-date version of apache arrow
 # Copy script to install deps
