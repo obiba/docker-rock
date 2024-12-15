@@ -21,7 +21,8 @@ RUN set -x && \
   unzip -q rock.zip && \
   rm rock.zip && \
   mv rock-${ROCK_VERSION} rock && \
-  adduser --system --home /var/lib/rock --no-create-home --disabled-password rock; \
+  groupadd --system --gid 10041 rock && \
+    useradd --system --home /var/lib/rock --no-create-home --uid 10041 --gid rock rock; \
   chmod +x /usr/share/rock/bin/rock
 
 COPY bin /opt/obiba/bin
@@ -41,8 +42,8 @@ RUN \
   # Install required R packages
   Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')" && \
   Rscript -e "install.packages(c('resourcer', 's3.resourcer'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)" && \
-  chown -R rock /var/lib/rock/R/library && \
-  chown -R rock $ROCK_HOME
+  chown -R rock:rock /var/lib/rock/R/library && \
+  chown -R rock:rock $ROCK_HOME
 
 # Install up-to-date version of apache arrow
 # Copy script to install deps
