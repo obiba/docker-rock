@@ -1,8 +1,9 @@
 services:
   rock:
     image: obiba/rock:latest
+    #image: obiba/rock:test
     ports:
-      - ${PORT}:8085
+      - 8885:8085
     #environment:
       #- ROCK_ADMINISTRATOR_NAME=${ROCK_ADMINISTRATOR_NAME}
       #- ROCK_ADMINISTRATOR_PASSWORD=${ROCK_ADMINISTRATOR_PASSWORD}
@@ -17,5 +18,5 @@ services:
       #- ROCK_SERVER=${ROCK_SERVER}
       #- ROCK_OPAL_SERVER=${ROCK_OPAL_SERVER}
       #- ROCK_OPAL_TOKEN=${ROCK_OPAL_TOKEN}
-    #volumes:
-      #- ${PROJECT_HOME}:/srv
+    volumes:
+      - /tmp/test-rock:/srv
