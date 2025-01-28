@@ -8,7 +8,7 @@ FROM obiba/obiba-r:4.4.2 AS server
 
 LABEL OBiBa <dev@obiba.org>
 
-ENV ROCK_VERSION 2.1.2
+ENV ROCK_VERSION 2.1.3
 ENV ROCK_HOME /srv
 ENV JAVA_OPTS -Xmx2G
 
