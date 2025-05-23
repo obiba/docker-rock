@@ -32,6 +32,7 @@ r:
 
 # Security
 security:
+  enabled: @rock_security_enabled@
   users:
     # administrator, can do all
     - id: @rock_administrator_name@

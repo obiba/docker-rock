@@ -91,8 +91,21 @@ else
 fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
+# Configure Security
+echo "[Info] Security properties"
+# security enabled
+if [ -n "$ROCK_SECURITY_ENABLED" ]
+then
+	sed s/@rock_security_enabled@/$ROCK_SECURITY_ENABLED/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+else
+	echo "[Info]   Enabling security by default."
+	sed s/@rock_security_enabled@/true/g $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
+fi
+
 # Configure users
-echo "[Info] Users properties"
+echo "[Info] Security - Users properties"
 # administrator
 if [ -n "$ROCK_ADMINISTRATOR_NAME" ]
 then
