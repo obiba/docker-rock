@@ -4,11 +4,11 @@
 # https://github.com/obiba/docker-rock
 #
 
-FROM obiba/obiba-r:4.5.1 AS server
+FROM obiba/obiba-r:4.5.2 AS server
 
 LABEL OBiBa=<dev@obiba.org>
 
-ENV ROCK_VERSION=2.1.5
+ENV ROCK_VERSION=2.1.6
 ENV ROCK_HOME=/srv
 ENV JAVA_OPTS=-Xmx2G
 
@@ -31,21 +31,27 @@ COPY conf/Rserv.conf /usr/share/rock/conf/Rserv.conf
 COPY conf/Rprofile.R /usr/share/rock/conf/Rprofile.R
 # Install up-to-date version of apache arrow
 # Copy script to install deps
+COPY scripts/install.mssql.bash .
 COPY scripts/install-arrow.bash .
 
 RUN chmod +x -R /opt/obiba/bin && \
   chown -R rock /opt/obiba && \
   mkdir -p /var/lib/rock/R/library && chown -R rock /var/lib/rock && \
   # Additional system dependencies
-  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu procps libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
-  apt clean && \
-  # Update R packages
-  #RUN Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')" && \
-  # Install required R packages
-  Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')" && \
-  Rscript -e "install.packages(c('resourcer', 's3.resourcer'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)" && \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y gosu procps libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libgit2-dev libssh2-1-dev openssh-client cmake && \
+  # Install MS SQL ODBC Driver
+  ./install.mssql.bash && \
   # Install up-to-date version of apache arrow
   ./install-arrow.bash && \
+  # Clean up apt cache
+  apt clean && \
+  # Update R packages
+  # Rscript -e "update.packages(ask = FALSE, repos = c('https://cloud.r-project.org'), instlib = '/usr/local/lib/R/site-library')" && \
+  # Install required R packages
+  Rscript -e "install.packages('Rserve', '/usr/local/lib/R/site-library', 'http://www.rforge.net/')" && \
+  Rscript -e "install.packages(c('resourcer', 's3.resourcer', 'odbc.resourcer'), repos = c('https://cloud.r-project.org'), lib = c('/var/lib/rock/R/library'), dependencies = TRUE)" && \
   Rscript -e "install.packages('arrow', lib=c('/usr/local/lib/R/site-library'))" && \
   chown -R rock:rock /var/lib/rock/R/library && \
   chown -R rock:rock $ROCK_HOME
