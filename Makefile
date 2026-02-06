@@ -2,6 +2,7 @@
 # Docker helper
 #
 
+tag=snapshot
 no_cache=true
 
 # Build Docker image
