@@ -1,4 +1,5 @@
 #!/bin/bash
 
 # Start rock
-/usr/share/rock/bin/rock
+echo "Starting rock..."
+exec /usr/share/rock/bin/rock
