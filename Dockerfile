@@ -4,11 +4,11 @@
 # https://github.com/obiba/docker-rock
 #
 
-FROM obiba/obiba-r:4.5.2-1 AS server
+FROM obiba/obiba-r:4.5.3 AS server
 
 LABEL OBiBa=<dev@obiba.org>
 
-ENV ROCK_VERSION=2.2.0
+ENV ROCK_VERSION=2.2.1
 ENV ROCK_HOME=/srv
 ENV JAVA_OPTS=-Xmx2G
 
