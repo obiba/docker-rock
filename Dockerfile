@@ -4,7 +4,7 @@
 # https://github.com/obiba/docker-rock
 #
 
-FROM obiba/obiba-r:4.5.3 AS server
+FROM obiba/obiba-r:4.6.1 AS server
 
 LABEL OBiBa=<dev@obiba.org>
 
