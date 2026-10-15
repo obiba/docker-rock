@@ -43,14 +43,19 @@ RUN set -x && \
   # Additional system dependencies
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y gosu procps curl ca-certificates libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libssh2-1-dev openssh-client cmake && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y gosu procps curl ca-certificates libsasl2-dev libssh-dev libjq-dev libgit2-dev libmariadb-dev libmariadb-dev-compat libpq-dev libsodium-dev libssh2-1-dev openssh-client cmake \
+    libcurl4-openssl-dev libssl-dev libxml2-dev libcairo2-dev freeglut3-dev pandoc cargo libmagick++-dev libharfbuzz-dev libfribidi-dev libv8-dev && \
   # Install MS SQL ODBC Driver
   ./install.mssql.bash && \
   rm -rf /var/lib/apt/lists/* install.mssql.bash && \
   # Install required R packages (--error: fail the build if a package fails to install; --skipmissing: suggested packages no longer on CRAN, e.g. RPresto, are skipped)
-  install2.r --error -r https://www.rforge.net/ Rserve && \
-  install2.r --error --skipmissing -l /var/lib/rock/R/library -r $ROCK_REPOS -d TRUE resourcer s3.resourcer odbc.resourcer && \
+  install2.r --error -r https://www.rforge.net/ Rserve unixtools && \
+  # Packages of the former obiba/obiba-r base image
+  install2.r --error --skipmissing -r $ROCK_REPOS -d TRUE opalr BiocManager devtools tidyverse knitr rmarkdown labelled haven sqldf tinytex moments && \
+  install2.r --error --skipmissing -l /var/lib/rock/R/library -r $ROCK_REPOS -d TRUE resourcer s3.resourcer odbc.resourcer dsBase dsTidyverse && \
   install2.r --error -r $ROCK_REPOS arrow && \
+  # Binary packages do not check their system libraries at install time: load them
+  Rscript -e ".libPaths(c('/var/lib/rock/R/library', .libPaths())); for (p in c('opalr', 'devtools', 'tidyverse', 'rmarkdown', 'labelled', 'haven', 'sqldf', 'moments', 'resourcer', 's3.resourcer', 'odbc.resourcer', 'dsBase', 'dsTidyverse', 'arrow', 'unixtools')) library(p, character.only = TRUE)" && \
   chown -R rock:rock /var/lib/rock && \
   chown -R rock:rock $ROCK_HOME
 
