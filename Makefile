@@ -27,5 +27,8 @@ test:
 logs:
 	docker logs -f rock-$(tag)
 
+shell:
+	docker exec -it rock-$(tag) bash
+
 stop:
 	docker stop rock-$(tag)
