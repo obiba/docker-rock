@@ -27,7 +27,7 @@ opal:
 
 # R executable path, required to launch Rserver
 r:
-  exec: /usr/bin/R
+  exec: /usr/local/bin/R
   repos: @rock_repos@
 
 # Security

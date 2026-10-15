@@ -84,10 +84,10 @@ mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 echo "[Info] R properties"
 if [ -n "$ROCK_REPOS" ]
 then
-	sed 's;@rock_repos@;$ROCK_REPOS;g' $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	sed "s;@rock_repos@;$ROCK_REPOS;g" $ROCK_HOME/conf/application.yml > /tmp/application.yml
 else
 	echo "[Info]   No R repositories, setting default"
-	sed 's;@rock_repos@;https://cloud.r-project.org,https://cran.obiba.org;g' $ROCK_HOME/conf/application.yml > /tmp/application.yml
+	sed 's;@rock_repos@;https://cloud.r-project.org;g' $ROCK_HOME/conf/application.yml > /tmp/application.yml
 fi
 mv -f /tmp/application.yml $ROCK_HOME/conf/application.yml
 
