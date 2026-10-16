@@ -9,10 +9,15 @@ rock_version=2.3.0
 port=8085
 user=administrator
 password=password
+file=Dockerfile
 
 # Build Docker image
 build:
-	docker build --pull --no-cache=$(no_cache) --build-arg R_VERSION=$(r_version) --build-arg ROCK_VERSION=$(rock_version) -t="obiba/rock:$(tag)" . --progress=plain
+	docker build --pull --no-cache=$(no_cache) --build-arg R_VERSION=$(r_version) --build-arg ROCK_VERSION=$(rock_version) -f $(file) -t="obiba/rock:$(tag)" . --progress=plain
+
+# Build the native executable variant
+build-native:
+	$(MAKE) build tag=$(tag)-native file=Dockerfile.native
 
 push:
 	docker image push obiba/rock:$(tag)

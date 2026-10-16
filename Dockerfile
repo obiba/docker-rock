@@ -12,23 +12,26 @@ FROM rocker/r-ver:${R_VERSION} AS server
 LABEL OBiBa=<dev@obiba.org>
 
 ARG ROCK_VERSION=2.3.0
-# set by docker build: amd64 or arm64
-ARG TARGETARCH
 
 ENV ROCK_VERSION=${ROCK_VERSION}
 ENV ROCK_HOME=/srv
 # Posit Package Manager serves prebuilt R packages for Ubuntu 24.04 (noble)
 ENV ROCK_REPOS=https://p3m.dev/cran/__linux__/noble/latest
-# accepted by the native executable, for compatibility with the JVM-based image
-ENV JAVA_OPTS=-Xmx1G
+ENV JAVA_OPTS="-Xmx1G -XX:+UseG1GC"
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Eclipse Temurin JRE, as in the former eclipse-temurin based image
+COPY --from=eclipse-temurin:25-jre-resolute $JAVA_HOME $JAVA_HOME
 
 WORKDIR /tmp
 
-# Install Rock Server: native executable and the default config files not overridden in conf/
-ADD --chmod=755 https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock-${ROCK_VERSION}-linux-${TARGETARCH} /usr/share/rock/bin/rock
-ADD --chmod=644 https://raw.githubusercontent.com/obiba/rock/${ROCK_VERSION}/src/dist/conf/logback.xml \
-  https://raw.githubusercontent.com/obiba/rock/${ROCK_VERSION}/src/dist/conf/system.info.R \
-  /usr/share/rock/conf/
+# Install Rock Server distribution, its default config files overridden by conf/
+ADD https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock-${ROCK_VERSION}-dist.zip rock.zip
+RUN unzip -q rock.zip -d /usr/share && \
+  mv /usr/share/rock-${ROCK_VERSION} /usr/share/rock && \
+  chmod +x /usr/share/rock/bin/rock && \
+  rm rock.zip
 
 COPY bin /opt/obiba/bin
 COPY conf /usr/share/rock/conf
