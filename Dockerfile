@@ -20,7 +20,7 @@ ENV ROCK_HOME=/srv
 # Posit Package Manager serves prebuilt R packages for Ubuntu 24.04 (noble)
 ENV ROCK_REPOS=https://p3m.dev/cran/__linux__/noble/latest
 # accepted by the native executable, for compatibility with the JVM-based image
-ENV JAVA_OPTS=-Xmx2G
+ENV JAVA_OPTS=-Xmx1G
 
 WORKDIR /tmp
 
