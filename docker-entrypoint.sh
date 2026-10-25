@@ -6,29 +6,27 @@ echo "[Info] ROCK_HOME=$ROCK_HOME"
 if [ "$1" = 'app' ]; then
     # Make sure conf folder is available
     if [ ! -d $ROCK_HOME/conf ]
-    	then
-    	mkdir -p $ROCK_HOME/conf
-    	cp -r /usr/share/rock/conf/* $ROCK_HOME/conf
-      # reinstating init script
-      if [ -f /opt/obiba/bin/first_run.sh.done ]
-      then
-        mv /opt/obiba/bin/first_run.sh.done /opt/obiba/bin/first_run.sh
-      fi
+    then
+      mkdir -p $ROCK_HOME/conf
+      cp -r /usr/share/rock/conf/* $ROCK_HOME/conf
     fi
-    chown -R rock "$ROCK_HOME"
 
-    if [ -f /opt/obiba/bin/first_run.sh ]
+    # Started as root: own the volume for the rock user and drop to it; otherwise run as the current user
+    if [ "$(id -u)" = 0 ]
+    then
+      chown -R rock "$ROCK_HOME"
+      RUN_AS="gosu rock"
+    fi
+
+    # First-run marker lives on the volume, next to the configuration it produced
+    if [ ! -f $ROCK_HOME/conf/.first_run.done ]
     then
       echo "First run setup..."
       /opt/obiba/bin/first_run.sh
-      mv /opt/obiba/bin/first_run.sh /opt/obiba/bin/first_run.sh.done
+      touch $ROCK_HOME/conf/.first_run.done
     fi
 
-    # FIXME AppArmor init
-    #service apparmor restart
-    #aa-disable usr.bin.r
-
-    exec gosu rock /opt/obiba/bin/start.sh
+    exec $RUN_AS /opt/obiba/bin/start.sh
 fi
 
 exec "$@"
