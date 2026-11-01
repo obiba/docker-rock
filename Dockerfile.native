@@ -26,6 +26,8 @@ WORKDIR /tmp
 
 # Install Rock Server: native executable and the default config files not overridden in conf/
 ADD --chmod=755 https://github.com/obiba/rock/releases/download/${ROCK_VERSION}/rock-${ROCK_VERSION}-linux-${TARGETARCH} /usr/share/rock/bin/rock
+# Create conf/ first: ADD --chmod would give the directory it creates the same 644 mode
+RUN mkdir -p /usr/share/rock/conf
 ADD --chmod=644 https://raw.githubusercontent.com/obiba/rock/${ROCK_VERSION}/src/dist/conf/logback.xml \
   https://raw.githubusercontent.com/obiba/rock/${ROCK_VERSION}/src/dist/conf/system.info.R \
   /usr/share/rock/conf/
